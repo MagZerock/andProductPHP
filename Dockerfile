@@ -18,7 +18,7 @@ WORKDIR /app
 
 COPY composer.json composer.lock* ./
 
-RUN composer install --no-dev --prefer-dist --no-interaction --no-audit --ignore-platform-reqs --no-autoloader
+RUN composer install --no-dev --prefer-dist --no-interaction --ignore-platform-reqs --no-autoloader
 
 COPY . .
 
