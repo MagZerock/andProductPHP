@@ -1,0 +1,42 @@
+<h1>Andino Products Management</h1>
+
+{{message}}
+
+<h2>Add New Product</h2>
+<form data-product-form action="?page=add" method="post" novalidate>
+    <div class="form-row">
+        <div class="form-group">
+            <label for="name">Product Name:</label>
+            <input type="text" id="name" name="name" value="{{name}}" placeholder="Ex. Cookie" required>
+            {{error_name}}
+        </div>
+        <div class="form-group">
+            <label for="brand">Brand:</label>
+            <input type="text" id="brand" name="brand" value="{{brand}}" placeholder="Ex. Havanna" required>
+            {{error_brand}}
+        </div>
+    </div>
+
+    <div class="form-row">
+        <div class="form-group">
+            <label for="flavor">Flavor:</label>
+            <input type="text" id="flavor" name="flavor" value="{{flavor}}" placeholder="Ex. Chocolate">
+        </div>
+        <div class="form-group">
+            <label for="category">Category:</label>
+            <select id="category" name="category" required>
+                <option value="" disabled {{category_empty}}>Select a category</option>
+                {{categories_options}}
+            </select>
+            {{error_category}}
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label for="price">Price ($):</label>
+        <input type="number" step="0.01" min="0" id="price" name="price" value="{{price}}" placeholder="0.00" required>
+        {{error_price}}
+    </div>
+
+    <button type="submit">Save Product</button>
+</form>
