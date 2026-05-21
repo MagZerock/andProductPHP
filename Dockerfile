@@ -27,4 +27,4 @@ RUN composer dump-autoload --no-dev --optimize
 
 EXPOSE 10000
 
-CMD php -S 0.0.0.0:${PORT:-10000} -t public
+CMD php -S 0.0.0.0:${PORT:-10000}
