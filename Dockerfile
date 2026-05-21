@@ -1,7 +1,13 @@
 FROM php:8.2-cli-bookworm
 
 RUN apt-get update \
-    && apt-get install -y --no-install-recommends git unzip libssl-dev pkg-config $PHPIZE_DEPS \
+    && apt-get install -y --no-install-recommends \
+        git \
+        unzip \
+        libssl-dev \
+        pkg-config \
+        libcurl4-openssl-dev \
+        $PHPIZE_DEPS \
     && pecl install mongodb \
     && docker-php-ext-enable mongodb \
     && rm -rf /var/lib/apt/lists/*
