@@ -1,37 +1,23 @@
+FROM mlocati/php-extension-installer:latest AS installer
 FROM php:8.2-cli-bookworm
 
-# 1. Instalar dependencias del sistema y herramientas de compilación básicas
-RUN apt-get update && apt-get install -y --no-install-recommends \
-        git \
-        unzip \
-        libssl-dev \
-        pkg-config \
-        libcurl4-openssl-dev \
-        zlib1g-dev \
-        autoconf \
-        g++ \
-        make \
-    && pecl install mongodb-1.16.2 \
-    && docker-php-ext-enable mongodb \
-    && apt-get purge -y --auto-remove autoconf g++ make \
+COPY --from=installer /usr/bin/install-php-extensions /usr/bin/
+RUN apt-get update && apt-get install -y --no-install-recommends git unzip \
+    && install-php-extensions mongodb \
     && rm -rf /var/lib/apt/lists/*
 
-# 2. Copiar Composer desde la imagen oficial
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 
-# 3. Configurar el directorio de trabajo
 WORKDIR /app
 
-# Cambia esto para que 'composer.lock' sea opcional al copiar usando un comodín
 COPY composer.json composer.lock* ./
 
-# Agregamos --no-audit para evitar bloqueos por alertas de seguridad en Render
-RUN composer install --no-dev --prefer-dist --optimize-autoloader --no-interaction --no-audit
-# 5. Copiar el resto del código de la aplicación
+RUN composer install --no-dev --prefer-dist --no-interaction --no-audit --ignore-platform-reqs --no-autoloader
+
 COPY . .
 
-# 6. Exponer el puerto por defecto
+RUN composer dump-autoload --no-dev --optimize
+
 EXPOSE 10000
 
-# 7. Comando de arranque usando la variable de entorno PORT (requerido por Render)
 CMD ["sh", "-c", "php -S 0.0.0.0:${PORT:-10000} -t public"]
