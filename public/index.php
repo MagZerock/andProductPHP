@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 use App\Andino\Products\Controller\ProductController;
 
-require __DIR__ . '/vendor/autoload.php';
+require __DIR__ . '/../vendor/autoload.php';
 
 $controller = new ProductController();
 $page = strtolower((string) ($_GET['page'] ?? 'products'));
