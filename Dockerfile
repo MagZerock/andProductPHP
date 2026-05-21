@@ -1,10 +1,16 @@
-FROM mlocati/php-extension-installer:latest AS installer
-FROM php:8.2-cli-bookworm
+FROM php:8.2-cli-alpine
 
-COPY --from=installer /usr/bin/install-php-extensions /usr/bin/
-RUN apt-get update && apt-get install -y --no-install-recommends git unzip \
-    && install-php-extensions mongodb \
-    && rm -rf /var/lib/apt/lists/*
+RUN apk update && apk add --no-interactive --no-cache \
+        git \
+        unzip \
+        openssl-dev \
+        pcre-dev \
+        icu-dev \
+        $PHPIZE_DEPS \
+    && pecl install mongodb-1.16.2 \
+    && docker-php-ext-enable mongodb \
+    && apk del $PHPIZE_DEPS \
+    && rm -rf /var/cache/apk/*
 
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 
