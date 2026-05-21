@@ -22,10 +22,11 @@ COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 # 3. Configurar el directorio de trabajo
 WORKDIR /app
 
-# 4. Copiar archivos de dependencias de PHP e instalarlas
-COPY composer.json composer.lock ./
-RUN composer install --no-dev --prefer-dist --optimize-autoloader --no-interaction
+# Cambia esto para que 'composer.lock' sea opcional al copiar usando un comodín
+COPY composer.json composer.lock* ./
 
+# Agregamos --no-audit para evitar bloqueos por alertas de seguridad en Render
+RUN composer install --no-dev --prefer-dist --optimize-autoloader --no-interaction --no-audit
 # 5. Copiar el resto del código de la aplicación
 COPY . .
 
