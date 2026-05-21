@@ -1,6 +1,6 @@
 FROM php:8.2-cli-bookworm
 
-# 1. Instalar dependencias del sistema y herramientas de compilación
+# 1. Instalar dependencias del sistema y herramientas de compilación básicas
 RUN apt-get update && apt-get install -y --no-install-recommends \
         git \
         unzip \
@@ -8,9 +8,12 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
         pkg-config \
         libcurl4-openssl-dev \
         zlib1g-dev \
-    && apt-get install -y --no-install-recommends $PHPIZE_DEPS \
-    && pecl install mongodb \
+        autoconf \
+        g++ \
+        make \
+    && pecl install mongodb-1.16.2 \
     && docker-php-ext-enable mongodb \
+    && apt-get purge -y --auto-remove autoconf g++ make \
     && rm -rf /var/lib/apt/lists/*
 
 # 2. Copiar Composer desde la imagen oficial
