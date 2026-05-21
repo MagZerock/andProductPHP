@@ -12,7 +12,8 @@ $method = strtoupper($_SERVER['REQUEST_METHOD'] ?? 'GET');
 
 $content = $controller->handle($page, $method);
 
-$indexHtml = file_get_contents(__DIR__ . '/src/view/index.html');
-$output = str_replace('<!--APP_CONTENT-->', $content, $indexHtml);
+$template = file_get_contents(__DIR__ . '/../src/view/index.html');
+$output = str_replace('', '<h1>Andino Products Migrated</h1>', $template); 
 
+echo $output;
 echo $output;
